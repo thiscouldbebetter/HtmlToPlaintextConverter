@@ -1,0 +1,108 @@
+<html>
+<body>
+
+<div id="divUi">
+
+	<h3>HTML-to-Plaintext Converter</h3>
+
+	<p>
+		Paste HTML into the "HTML to Convert" text box, then click the "Remove HTML from Text" button to remove all the HTML tags from it.
+	</p>
+
+	<div>
+		<label>HTML to Convert:</label><br />
+		<textarea id="textareaHtmlToConvert" cols="80" rows="16">
+&lt;p attributeName="attributeValue"&gt;This is a &lt;em&gt;test&lt;/em&gt;!&lt;/p&gt;
+		</textarea>
+	</div>
+
+	<button onclick="UiEventHandler.buttonRemoveHtmlFromText_Clicked()">Remove HTML from Text</button>
+
+	<div>
+		<label>Plaintext:</label><br />
+		<textarea id="textareaPlaintext" cols="80" rows="16"></textarea>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+class HtmlToPlaintextConverter
+{
+	htmlConvertToPlaintext(htmlToConvert)
+	{
+		var plaintext = "";
+
+		var isInHtmlTag = false;
+		var isInDoubleQuote = false;
+		var isInSingleQuote = false;
+
+		for (var i = 0; i < htmlToConvert.length; i++)
+		{
+			var char = htmlToConvert[i];
+			if (isInHtmlTag)
+			{
+				if (isInSingleQuote)
+				{
+					if (char == "'")
+					{
+						isInSingleQuote = false;
+					}
+				}
+				else if (isInDoubleQuote)
+				{
+					if (char == "\"")
+					{
+						isInDoubleQuote = false;
+					}
+				}
+				else if (char == "'")
+				{
+					isInSingleQuote = true;
+				}
+				else if (char == "\"")
+				{
+					isInDoubleQuote = true;
+				}
+				else if (char == ">")
+				{
+					isInHtmlTag = false;
+				}
+				else
+				{
+					// Do nothing.
+				}
+			}
+			else if (char == "<")
+			{
+				isInHtmlTag = true;
+			}
+			else
+			{
+				plaintext += char;
+			}
+		}
+
+		return plaintext;
+	}
+}
+
+class UiEventHandler
+{
+	static buttonRemoveHtmlFromText_Clicked()
+	{
+		var converter = new HtmlToPlaintextConverter();
+		var d = document;
+		var textareaHtmlToConvert = d.getElementById("textareaHtmlToConvert");
+		var htmlToConvert = textareaHtmlToConvert.value;
+		var plaintext = converter.htmlConvertToPlaintext(htmlToConvert);
+		var textareaPlaintext = d.getElementById("textareaPlaintext");
+		textareaPlaintext.value = plaintext;
+	}
+}
+
+</script>
+
+</body>
+
+</html>
