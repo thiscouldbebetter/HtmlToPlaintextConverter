@@ -83,6 +83,10 @@ class HtmlToPlaintextConverter
 			}
 		}
 
+		plaintext = plaintext.split("&lt;").join("<");
+		plaintext = plaintext.split("&gt;").join(">");
+		plaintext = plaintext.split("&amp;").join("&");
+
 		return plaintext;
 	}
 }
